@@ -1,0 +1,60 @@
+
+// Using the Todo property for the implementation of our routes
+var db = require("../models");
+
+// List of all todo items
+exports.getTodos = function(req, res){
+    db.Todo.find()
+    .then(function(todos){
+        res.json(todos);
+    })
+    .catch(function(err){
+        res.send(err);
+    })
+}
+
+// Creating a todo item
+exports.createTodo = function(req, res){
+    db.Todo.create(req.body)
+    .then(function(newTodo){
+        res.status(201).json(newTodo);
+    })
+    .catch(function(err){
+        res.send(err);
+    })
+}
+
+// Finding a todo item
+exports.getTodo = function(req, res){
+    db.Todo.findById(req.params.todoId)
+    .then(function(foundTodo){
+        res.json(foundTodo);
+    })
+    .catch(function(err){
+        res.send(err);
+    })
+}
+
+// Updating a todo item
+exports.updateTodo = function(req, res){
+    db.Todo.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true})
+    .then(function(todo){
+        res.json(todo);
+    })
+    .catch(function(err){
+        res.send(err);
+    })
+}
+
+// Deleting a todo item
+exports.deleteTodo = function(req, res){
+    db.Todo.remove({_id: req.params.todoId})
+    .then(function(){
+        res.send("Item deleted");
+    })
+    .catch(function(err){
+        res.send(err);
+    })
+}
+
+module.exports = exports;
